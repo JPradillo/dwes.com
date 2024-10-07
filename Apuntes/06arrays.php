@@ -93,10 +93,136 @@
     <p>Arrays con dos dimensiones y por tanto para acceder a un elemento hacen falta dos claves.</p>
 <?php
     $notas = Array(
-
-
-
+        Array(3.5, 6, 8, 9.5, 3),
+        Array(2, 5, 6, 5.5, 10),
+        Array(4.5, 3, 2.5, 7, 8),
+        Array(7, 1, 0, 1.5, 3.5)
     );
+
+    echo "El elemento en la fila 2 columna 3 --> {$notas[1][2]}" . SALTO;
+
+    $notas[][] = 9;
+    echo "El úlitmo elemento de la última fila: {$notas[4][0]}" . SALTO;
+
+    $notas[3][] = 7.5;
+    echo "El último elemento de la fila 4: {$notas[3][5]}" . SALTO;
+
+    $numeros = [1,2,3,4,5];
+    // echo "El último elemento del array es {$numeros[-1]}";   --> Esto no se puede hacer (No muestra nada).
+    // para arreglarlo podemos hacer $notas = [-1 => 1, 2, 3, 4, 5];  --> Al poner el echo de antes, muestra el 1 por pantalla.
+
+    $coches = [
+        '1234ABC' => ['marca' => 'Seat', 'modelo' => 'Ibiza', 'motor' => 'Diesel', 'pvp' => 18000],
+        '4321CBA' => ['marca' => 'Ford', 'modelo' => 'Focus', 'motor' => 'Gasolina', 'pvp' => 21000]
+    ];
+    echo "El primer coche es {$coches['1234ABC']['marca']} modelo {$coches['1234ABC']['modelo']}" . SALTO;
+
+    // Crea un array de un equipo de fútbol donde cada fila son las posiciones
+    // donde juegan los jugadores con el conjunto de jugadores identificados por su 
+    // dorsal.
+?>
+
+    <h2>Arrays multidimensionales</h2>
+<?php
+    $notas = [
+        [
+            [3,4,5,6],
+            [8,2,9,3]
+        ],
+        [
+            [1,9,8,5],
+            [2,8,4,5]
+        ],
+        
+            [2,8,4,6],
+            [9,10,4,3]    
+    ];
+
+    echo "Accedo al elemento 1, 1, 2: {$notas[1][1][2]}" . SALTO;
+
+    $notas = [
+        'Juan' => [
+            'T1' => ['dwes' => 6, 'dwec' => 5, 'daw' => 8, 'diw' => 7],
+            'T2' => ['dwes' => 5.5, 'dwec' => 7.5, 'daw' => 6, 'diw' => 6],
+            'T3' => ['dwes' => 5, 'dwec' => 7, 'daw' => 6.5, 'diw' => 4]
+        ],
+        'María' => [
+            'T1' => ['dwes' => 9, 'dwec' => 6, 'daw' => 7.5, 'diw' => 7],
+            'T2' => ['dwes' => 8, 'dwec' => 7, 'daw' => 6.5, 'diw' => 5.5],
+            'T3' => ['dwes' => 7, 'dwec' => 7, 'daw' => 4.5, 'diw' => 5.5]
+        ]
+    ];
+
+    echo "La nota de María en el segundo tirmestre en dwec es {$notas['María']['T2']['dwec']}" . SALTO;
+
+    $alumno = "María";
+    $trimestre = "T2";
+    $modulo = "dwec";
+
+    echo "La nota de María en el segundo tirmestre en dwec es {$notas['María']['T2']['dwec']}" . SALTO;
+    echo "La nota de María en el segundo tirmestre en dwec es {$notas[$alumno][$trimestre][$modulo]}" . SALTO;
+?>
+
+    <h2>Recorrer un array</h2>
+<?php
+    // PARA ARRAY ESCALARES PUEDO USAR UN BUCLE FOR TRADICIONAL
+    $numeros = [6,19,12,7,11,9,3];
+    for( $i = 0; $i < count($numeros); $i++ ) {
+        echo "Elemento $i es {$numeros[$i]}" . SALTO;
+    }
+
+    echo SALTO;
+
+    // PARA CUALQUIER TIPO DE ARRAY TENEMOS EL BUCLE FOREACH
+    // foreach ($array as [$clave] => $valor) {
+    // 
+    // };
+    // o:
+    // foreach ($array as [$clave =>] $valor) {
+    // 
+    // };
+    foreach( $numeros as $numero ) {
+        echo "El número es $numero" . SALTO;
+    }
+
+    echo SALTO;
+    
+    $alumno = [];
+    $alumno['nombre'] = "Juan Gómez";
+    $alumno[0] = 4;
+    $alumno[1] = 6;
+    $alumno[2] = 5;
+    $alumno['media'] = 5;
+
+    foreach( $alumno as $clave => $valor ) {
+        echo "Elemento con clave $clave y valor $valor" . SALTO;
+    };
+
+    /*
+    Si es un array bidimensional escalar podemos usar dos bucles for anidados
+
+    echo "<h3>Recorrido de arrays multidimensionales</h3>";
+    for( $i = 0; $i < count($notas); $i++ ) {
+        echo "Recorrido de la fila $i" . SALTO;
+        for( $j = 0; $i < count($notas[$i]); $j++ ) {
+            echo "Fila $i Columna $j --> {$notas[$i][$j]}" . SALTO;
+        }
+    }
+    
+    */
+    echo SALTO;
+
+    foreach( $notas as $alumno => $trimestres ) {
+        echo "Notas de $alumno: " . SALTO;
+        foreach( $trimestres as $trimestre => $modulos ) {
+            echo "Notas del trimestre: $trimestre: " . SALTO;
+            foreach( $modulos as $modulo => $nota ) {
+                echo "Módulo: $modulo Nota: $nota" . SALTO;
+            }
+            echo "----------------------------" . SALTO;
+        }
+        echo "=============================" . SALTO;
+    }
 ?>
 </body>
 </html>
