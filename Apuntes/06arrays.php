@@ -204,7 +204,7 @@
     echo "<h3>Recorrido de arrays multidimensionales</h3>";
     for( $i = 0; $i < count($notas); $i++ ) {
         echo "Recorrido de la fila $i" . SALTO;
-        for( $j = 0; $i < count($notas[$i]); $j++ ) {
+        for( $j = 0; $j < count($notas[$i]); $j++ ) {
             echo "Fila $i Columna $j --> {$notas[$i][$j]}" . SALTO;
         }
     }
@@ -222,7 +222,20 @@
             echo "----------------------------" . SALTO;
         }
         echo "=============================" . SALTO;
-    }
+    };
+
+    $coches = [
+        '1234ABC' => ['marca' => 'Seat', 'modelo' => 'Ibiza', 'motor' => 'Diesel', 'pvp' => 18000],
+        '4321CBA' => ['marca' => 'Ford', 'modelo' => 'Focus', 'motor' => 'Gasolina', 'pvp' => 21000]
+    ];
+
+    foreach( $coches as $matricula => $coche ) {
+        echo "Coche con matrícula: $matricula" . SALTO;
+        foreach( $coche as $clave => $valor ) {
+            echo "$clave: $valor" . SALTO;
+        }
+        echo "----------------------" . SALTO;
+    };
 ?>
 </body>
 </html>
