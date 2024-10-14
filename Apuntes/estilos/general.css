@@ -5,3 +5,8 @@ body {
 
     box-shadow: 0.2em 0.2em 0.1em lightgrey;
 }
+
+header {
+    font-size: 2em;
+    text-align: center;
+}
