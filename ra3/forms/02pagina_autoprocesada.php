@@ -8,10 +8,10 @@ Páginas autoprocesadas:
       y se procesa la petición, generando la salida.
 */
 
-require_once($_SERVER['DOCUMENT_ROOT'] . "/includes/funciones.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/Apuntes/includes/funciones.php");
 
 inicio_html("Páginas autoprocesadas", 
-                ["/estilos/general.css", "/estilos/formulario.css"]);
+                ["/Apuntes/estilos/general.css", "/Apuntes/estilos/formulario.css"]);
 
 if( $_SERVER['REQUEST_METHOD'] == "GET") {
     // Genero el formulario ?>
@@ -28,8 +28,7 @@ if( $_SERVER['REQUEST_METHOD'] == "GET") {
                 <input type="email" name="email" id="email" size="40" required>
 
                 <label for="clave">Clave</label>
-                <input type="password" name="clave" id="clave" size="10" required
-
+                <input type="password" name="clave" id="clave" size="10" required>
             </fieldset>
             <input type="submit" name="operacion" value="Enviar">
         </form>
