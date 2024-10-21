@@ -31,7 +31,7 @@ if ( $_SERVER['REQUEST_METHOD'] == "POST" ) {
     $comentarios = htmlspecialchars($_POST['comentarios']);
     $operacion = htmlspecialchars($_POST['operacion']);
 
-    echo "<h3>Datos filtrados con hrmlspecialchars()</h3>";
+    echo "<h3>Datos filtrados con htmlspecialchars()</h3>";
     echo "<p>Dni: $dni <br>";
     echo "Nombre: $nombre <br>";
     echo "Email: $email <br>";
@@ -106,7 +106,7 @@ if ( $_SERVER['REQUEST_METHOD'] == "POST" ) {
         if( is_array($valor) ){
             echo "$clave: " . implode(", ", $valor) . "<br>";
         } else {
-           echo "$clave: $valor";
+           echo "$clave: $valor<br>";
         }
     }
     echo "</p>";
@@ -117,12 +117,132 @@ if ( $_SERVER['REQUEST_METHOD'] == "POST" ) {
     Uso de las funciones filter_input() y filter_input_array()
     */
 
-    $dni3 = filter_input(INPUT_POST, 'dni', );
+    // Por lo general las cadenas de texto se sanean
+    $dni3 = filter_input(INPUT_POST, 'dni', FILTER_SANITIZE_SPECIAL_CHARS);
+    $nombre3 = filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_SPECIAL_CHARS);
+    $clave3 = filter_input(INPUT_POST, 'clave', FILTER_DEFAULT);
+    $comentarios3 = filter_input(INPUT_POST, 'comentarios', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $operacion3 = filter_input(INPUT_POST, 'operacion', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
+    // Validación de formato email
     $email3 = filter_input(INPUT_POST, 'email', 
                     FILTER_VALIDATE_EMAIL, FILTER_NULL_ON_FAILURE);
+    // Validación de formato boolean
     $suscripcion3 = filter_input(INPUT_POST, 'suscripcion', FILTER_VALIDATE_BOOL);
+    // Validación de formato URL
+    $sitio3 = filter_input(INPUT_POST, 'sitio', FILTER_VALIDATE_URL);
+    // Validación de formato float con rango incluido
+    $peso3 = filter_input(INPUT_POST, 'peso', 
+                          FILTER_VALIDATE_FLOAT,
+                          Array('options' => ['min_range' => 40, 'max_range' => 150],
+                                'flags' => FILTER_NULL_ON_FAILURE));
+    // Validación de formato integer con rango incluido
+    $edad3 = filter_input(INPUT_POST, 'edad', FILTER_VALIDATE_INT,
+                          Array('options' => ['min_range' => 18, 'max_range' => 80],
+                                'flags' => FILTER_NULL_ON_FAILURE));
+    // 
+    $patologias3 = filter_input(INPUT_POST, 'patologias_previas', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
 
+    echo "<h3>Datos filtrados con filter_input() y filter_input_array()</h3>";
+    echo "<p>Dni: $dni3 <br>";
+    echo "Nombre: $nombre3 <br>";
+    echo "Email: $email3 <br>";
+    echo "Clave: $clave3 <br>";
+    echo "Suscripción: $suscripcion3 <br>";
+    echo "Sitio: $sitio3 <br>";
+    echo "Peso: $peso3 <br>";
+    echo "Edad: $edad3 <br>";
+    echo "Patologías: " . implode(", ", $patologias3) . "<br>";
+    echo "Comentarios: $comentarios3 <br>";
+    echo "Operación: $operacion3 </p>";
+    
+    /*
+    VALIDACIÓN DE DATOS CON LÓGICA DE DATOS
+    ========================================
+    */
+    echo "<h3>Validación de datos con lógica de datos</h3>";
+    echo "<p>";
+
+    // Formato del DNI -> 8 dígitos numéricos y una letra mayúscula
+    $dni4 = filter_input(INPUT_POST, 'dni', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $exp_reg = "/^[0-9]{7,8}[A-Z]{1}$/";
+    if( preg_match($exp_reg, $dni4) ) {
+        echo "DNI: $dni4<br>";
+    } else {
+        echo "DNI: NO tiene el formato adecuado<br>";
+        $dni4 = null;
+    }
+
+    // Nombres de usuario solo con caracteres alfabéticos y dígitos numéricos
+    // Con logitud mínima de 4 y máxima 8
+    $nombre4 = filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    if( ctype_alnum($nombre4) && strlen($nombre4) >= 4 && strlen($nombre4) <= 8 ){
+        echo "Nombre: $nombre4<br>";
+    } else {
+        echo "Nombre: NO tiene el formato adecuado<br>";
+    }
+
+    /*
+     Clave: Requisitos de complejidad
+     Tipos de caracteres: mayúsculas, minúsculas, números y símbolos gráficos
+     Logitod mínima: 6
+    */
+    $clave4 = htmlspecialchars($_POST['clave']);
+
+    $minusculas = preg_match("/[a-z]/", $clave4);
+    $mayusculas = preg_match("/[A-Z]/", $clave4);
+    $numeros = preg_match("/[0-9]/", $clave4);
+    $simbolos_graficos = preg_match("/[,.\-;:\+\*&\(\)!\=\\?@#|]/", $clave4);
+    if( $mayusculas && $minusculas && $numeros && $simbolos_graficos && strlen($clave4) >= 6 ) {
+        echo "Clave: La clave es correcta<br>";
+    } else {
+        echo "Clave: NO cumple los requisitos de complejidad<br>";
+    }
+    
+    $peso4 = filter_input(INPUT_POST, 'peso', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION,
+                          Array('options' => ['min_range' => 40, 'max_range' => 150],
+                          'flags' => FILTER_NULL_ON_FAILURE));
+    if( is_numeric($peso4) ) {
+        echo "Peso: $peso4<br>";
+    } else {
+        echo "Peso: NO tiene formato adecuado<br>";
+    }
+
+    $peso_float = floatval($peso4);
+
+    // Validación de los datos de una lista
+    $patologias4 = filter_input(INPUT_POST, 'patologias_previas', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_REQUIRE_ARRAY);
+    $valores_validos = ['osteoporosis', 'diabetes', 'colesterol', 'arterioesclerosis', 'anemia'];
+    
+    /*
+     Si la lista solo tiene un valor
+    if( in_array($patologias4, $valores_validos) ) {
+        echo "Patologías: $patologias4<br>";
+    } else {
+        echo "Patologías: ERROR. Hay una no válida.<br>";
+    }
+    */
+
+    $todo_ok = true;
+    foreach( $patologias4 as $patologia ) {
+        if( !in_array($patologia, $valores_validos) ) {
+            $todo_ok = false;
+            break;
+        }
+    }
+    if($todo_ok) {
+        echo "Patologías: " . implode(", ", $patologias4) . "<br>";
+    } else {
+        echo "Patologías: ERROR. Hay patologías que no son válidas.<br>";
+    }
+
+    for( $i = 0; $i < count($patologias4); $i++ ) {
+        if( !in_array($patologias4[$i], $valores_validos) ) {
+            echo "";
+        }
+    }
+
+    echo "</p>";
 
     echo "<p><a href='" . $_SERVER['PHP_SELF'] . "'>Introducir otros datos</a></p>";
 }
